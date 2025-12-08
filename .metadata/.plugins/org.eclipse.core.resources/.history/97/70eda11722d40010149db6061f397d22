@@ -1,0 +1,210 @@
+package com.hcl.guvi.capstonproject.eventmanagement.service;
+
+
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.List;
+
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.hcl.guvi.capstonproject.eventmanagement.client.UserMembershipClient;
+import com.hcl.guvi.capstonproject.eventmanagement.dto.EventDto;
+import com.hcl.guvi.capstonproject.eventmanagement.dto.MembershipDTO;
+import com.hcl.guvi.capstonproject.eventmanagement.entity.EventEntity;
+import com.hcl.guvi.capstonproject.eventmanagement.exception.ResourceNotFoundException;
+import com.hcl.guvi.capstonproject.eventmanagement.policy.MembershipPolicy;
+import com.hcl.guvi.capstonproject.eventmanagement.repository.ClubRepository;
+import com.hcl.guvi.capstonproject.eventmanagement.repository.EventRepository;
+import com.hcl.guvi.capstonproject.eventmanagement.serviceinterface.EventInterface;
+import com.hcl.guvi.capstonproject.eventmanagement.entity.ClubEntity;
+@Service
+public class EventService implements EventInterface {
+	private static final Logger logger = LoggerFactory.getLogger(EventService.class);
+	private final ModelMapper modelMapper=new ModelMapper();
+    @Autowired
+    private EventRepository eventRepository;
+    @Autowired
+    private ClubRepository clubRepository;
+	@Autowired
+	private  UserMembershipClient membershipClient;
+	@Override
+    public String saveEvent(EventDto eventDto) {
+
+YearMonth now = YearMonth.now();
+LocalDateTime startOfMonth = now.atDay(1).atStartOfDay();
+LocalDateTime startOfNextMonth = now.plusMonths(1).atDay(1).atStartOfDay();
+
+
+
+        String ownerUserId = eventDto.getOwnerName();
+        int currentMonthEvents = eventRepository.countEventsByOwnerAndMonth(
+        	    ownerUserId, startOfMonth, startOfNextMonth
+        	);
+        Long clubId = eventDto.getClubId();
+
+        // 1) Validate club exists and belongs to owner
+        ClubEntity club = clubRepository.findById(clubId)
+            .orElseThrow(() -> new IllegalArgumentException("Club not found"));
+        if (!ownerUserId.equals(club.getOwnerName())) {
+            throw new SecurityException("Owner does not own this club");
+        }
+
+        // 2) Fetch membership from User Management
+        MembershipDTO membership = membershipClient.getActiveMembership(ownerUserId);
+        if (membership == null || !"APPROVED".equalsIgnoreCase(membership.getStatus())) {
+            throw new SecurityException("Active approved membership required to create events");
+        }
+
+        // 3) Convert membership type to MembershipPlan enum
+        MembershipPlan plan;
+        try {
+            plan = MembershipPlan.valueOf(membership.getType().toUpperCase());
+           for(int i=0;i<10;i++) {
+        	   System.out.println(plan);
+           }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Invalid membership type: " + membership.getType());
+        }
+
+        // 4) Apply monthly limit using MembershipPolicy
+        int maxAllowed = MembershipPolicy.maxEventsPerMonth(plan);
+        YearMonth currentMonth = YearMonth.now();
+      
+        if (currentMonthEvents >= maxAllowed) {
+            throw new IllegalStateException("Limit reached: " + maxAllowed +
+                " events per month for " + plan.name());
+        }
+
+        // 5) Save event
+        EventEntity event = new EventEntity();
+        event.setEventName(eventDto.getEventName());
+        event.setEventDate(eventDto.getEventDate());
+        event.setRsvp(eventDto.getRsvp());
+        event.setClub(club);
+        event.setOwnerName(eventDto.getOwnerName());
+
+        eventRepository.save(event);
+        return "Event created successfully!";
+    }
+
+
+//	@Override
+//	public String saveEvent(EventDto dto) {
+//
+//		 ClubEntity club = clubRepository.findById(dto.getClubId())
+//		            .orElseThrow(() -> new ResourceNotFoundException("Club not found with ID: " + dto.getClubId()));
+//
+//		        EventEntity entity = new EventEntity();
+//		        entity.setEventName(dto.getEventName());
+//		        entity.setEventDate(dto.getEventDate());
+//		        entity.setRsvp(Boolean.TRUE.equals(dto.getRsvp()));
+//		        entity.setClub(club);
+//                eventRepository.save(entity);
+//                logger.info("Event saved successfully: {}", entity.getEventName());
+//
+//		        return "successfully save event";
+//
+//	}
+
+	@Override
+	public String updateEvent(EventDto event) {
+		EventEntity eventUpdateById=eventRepository.findById(event.getId()).orElseThrow(()->new 
+				 ResourceNotFoundException("Event not found with ID: " + event.getId()));
+;
+					if(event.getEventDate()!=null) {
+				eventUpdateById.setEventDate(event.getEventDate());
+			}
+			 if(event.getRsvp()!=null) {
+				eventUpdateById.setRsvp(event.getRsvp());
+			}
+			 eventRepository.save(eventUpdateById);
+			 logger.info("Event save Successfully",eventUpdateById.getId());
+			 return "Successfully updated event";
+		
+	}
+
+
+@Override
+public List<EventDto> findAllEvent() {
+    List<EventEntity> eventEntity = eventRepository.findAll();
+    logger.info("Fetched {} events from database", eventEntity.size());
+
+    List<EventDto> event = eventEntity.stream().map(entity -> {
+        EventDto dto = new EventDto();
+        dto.setId(entity.getId());
+        dto.setEventName(entity.getEventName());
+        dto.setEventDate(entity.getEventDate());
+        dto.setRsvp(entity.getRsvp());
+
+        // ✅ Map club ID safely (handle nulls to avoid NPE)
+        ClubEntity club = entity.getClub();
+        dto.setClubId(club != null ? club.getId() : null);
+
+        return dto;
+    }).collect(Collectors.toList());
+
+    return event;
+}
+
+
+	@Override
+	public List<EventDto> findrequiredEventByName(String name) {
+
+		 List< EventEntity> allEvents = eventRepository.findAllByOwnerName(name);
+		
+		 List<EventDto> event = allEvents.stream().map(entity -> {
+		        EventDto dto = new EventDto();
+		        dto.setId(entity.getId());
+		        dto.setEventName(entity.getEventName());
+		        dto.setEventDate(entity.getEventDate());
+		        dto.setRsvp(entity.getRsvp());
+
+		        // ✅ Map club ID safely (handle nulls to avoid NPE)
+		        ClubEntity club = entity.getClub();
+		        dto.setClubId(club != null ? club.getId() : null);
+
+		        return dto;
+		    }).collect(Collectors.toList());
+
+		    return event;
+	}
+
+	@Override
+	public String deleteEventByName(String name) {
+
+
+		 List<EventEntity> events = eventRepository.findByEventName(name);
+		        if (events.isEmpty()) {
+		            logger.error("Event not found with name: {}", name);
+		            throw new ResourceNotFoundException("Event not found with name: " + name);
+		        }
+
+		        eventRepository.deleteAll(events);
+		        logger.info("Deleted events with name: {}", name);
+		        return "Successfully deleted event(s)";
+
+		
+		
+	}
+
+	@Override
+	public String updateRsvp(Long id, Boolean rsvp) {
+
+		 EventEntity eventEntity = eventRepository.findById(id)
+		                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + id));
+
+		        eventEntity.setRsvp(rsvp);
+		        eventRepository.save(eventEntity);
+		        logger.info("RSVP updated for event ID: {}", id);
+		        return "Successfully updated RSVP";
+
+		
+	}
+
+}

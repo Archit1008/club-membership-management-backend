@@ -1,0 +1,105 @@
+#spring.application.name=eventmanagement
+#server.port=8283
+#spring.jpa.hibernate.ddl-auto=update
+#spring.datasource.url = jdbc:mysql://localhost:3306/eventmanagement?useSSL=false
+#spring.datasource.username=root
+#spring.datasource.password=architjain
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.jpa.show-sql:true
+#spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+##jwt.secret=Archit4321@
+#logging.level.org.springframework.security=DEBUG
+#logging.level.root=INFO
+#logging.level.com.yourpackage=DEBUG
+#debug=true
+## Enable debug mode
+#debug=true
+#eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+#eureka.client.register-with-eureka=true
+#eureka.client.fetch-registry=true
+#eureka.instance.prefer-ip-address=true
+#spring.cloud.compatibility-verifier.enabled=false
+#`` Part (Coming Up)
+#- `SecurityConfig` with JWT filter
+#- `JwtAuthenticationFilter`
+#- `AuthController`, `AdminController`, `MemberController`
+#- `@PreAuthorize` usage
+
+# =========================
+# Service Identity & Server
+# =========================
+spring.application.name=eventmanagement
+server.port=8283
+
+# ============
+# Data Source
+# ============
+spring.datasource.url=jdbc:mysql://localhost:3306/eventmanagement?useSSL=false
+spring.datasource.username=root
+spring.datasource.password=architjain
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# =====
+# JPA
+# =====
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+# If you're on MySQL 8+, prefer:
+# spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+# =========
+# Logging
+# =========
+logging.level.root=INFO
+logging.level.org.springframework.security=DEBUG
+# Use your base package for app logs:
+logging.level.com.hcl.guvi.capstonproject=DEBUG
+
+# ===================
+# Spring Boot Debug
+# ===================
+debug=true
+
+# ===================
+# Eureka Discovery
+# ===================
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+eureka.client.register-with-eureka=true
+eureka.client.fetch-registry=true
+eureka.instance.prefer-ip-address=true
+
+# ==============================
+# Compatibility Verifier Toggle
+# ==============================
+spring.cloud.compatibility-verifier.enabled=false
+
+# =====================================
+# Membership Policy (properties version)
+# =====================================
+# These align with your MembershipPolicy and can be injected if you use @ConfigurationProperties
+membership.policy.silverMaxActiveEvents=5
+membership.policy.goldMaxActiveEvents=20
+
+# =========================================
+# Feign client base URL to User Management
+# =========================================
+# If NOT using Eureka for Feign resolution, set direct URL:
+user.management.url=http://localhost:8989
+
+# If using Eureka + Feign with serviceId, change your Feign client to @FeignClient(name = "user")
+# and you can comment out the user.management.url above.
+
+# ====================================
+# OpenFeign default client timeouts
+# ====================================
+spring.cloud.openfeign.client.config.default.connectTimeout=5000
+spring.cloud.openfeign.client.config.default.readTimeout=10000
+spring.cloud.openfeign.client.config.default.loggerLevel=BASIC
+
+# ====================
+# JWT (example only)
+# ====================
+# DO NOT hardcode in production; use env vars or secrets manager
+# jwt.secret=Archit4321@
+

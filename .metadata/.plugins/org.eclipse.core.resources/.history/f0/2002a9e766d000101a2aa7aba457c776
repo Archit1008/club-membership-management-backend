@@ -1,0 +1,5 @@
+package com.hcl.guvi.capstonproject.eventmanagement.client;
+
+public class FeignAuthForwardingConfig {
+
+}

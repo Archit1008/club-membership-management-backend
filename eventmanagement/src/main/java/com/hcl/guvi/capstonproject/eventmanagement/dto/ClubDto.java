@@ -1,0 +1,17 @@
+package com.hcl.guvi.capstonproject.eventmanagement.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ClubDto {
+	  private Long id;
+      private String clubName;
+      private String location;
+      private String ownerName;
+}

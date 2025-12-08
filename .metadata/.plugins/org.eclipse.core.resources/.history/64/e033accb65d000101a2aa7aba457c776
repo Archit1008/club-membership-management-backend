@@ -1,0 +1,5 @@
+package com.hcl.user.securityconfig;
+
+public class FeignAuthForwardingConfig {
+
+}

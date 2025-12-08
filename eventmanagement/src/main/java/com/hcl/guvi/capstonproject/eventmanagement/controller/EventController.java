@@ -1,0 +1,72 @@
+package com.hcl.guvi.capstonproject.eventmanagement.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hcl.guvi.capstonproject.eventmanagement.dto.EventDto;
+import com.hcl.guvi.capstonproject.eventmanagement.service.EventService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@RestController
+@RequestMapping("/events")
+public class EventController {
+	private static final Logger logger=LoggerFactory.getLogger(EventController.class);
+	@Autowired
+	private EventService eventService;
+	@PostMapping("/saveEvent")
+	public ResponseEntity<String>saveEvent(@RequestBody EventDto event){
+		logger.info("Request to save event"+event.getEventName());
+		String s=eventService.saveEvent(event);
+		
+		return new ResponseEntity<>(s,HttpStatus.OK);
+	}
+
+	@PutMapping("/updateEvent")
+	public ResponseEntity<String>upDateEvent(@RequestBody EventDto event){
+		logger.info("request to update event"+event.getEventName());
+		String s=eventService.updateEvent(event);
+		return new ResponseEntity<>(s,HttpStatus.OK);
+	}
+	@GetMapping("/getEvent")
+	public ResponseEntity<List<EventDto>>getAllEvent(){
+		logger.info("request to fetch all event of event");
+		List<EventDto> events=eventService.findAllEvent();
+		logger.info("fetching event"+events.size());
+		return new ResponseEntity<>(events,HttpStatus.OK);
+	}
+	@GetMapping("/getEventBy/{ownerName}")
+	public ResponseEntity<List<EventDto>>getEventByOwnerName(@PathVariable String ownerName){
+//		logger.info("Request to find event by id",ownerName);
+		List<EventDto> events=eventService.findrequiredEventByName(ownerName);
+//		logger.info("Fetched event: {}", events.getEventName());
+		return new ResponseEntity<>(events,HttpStatus.OK);
+	}
+	@DeleteMapping("/deleteEvent/{eventName}")
+	public ResponseEntity<String>deleteEvent(@PathVariable String eventName){
+		logger.info("Request to delete event by name: {}", eventName);
+		String response=eventService.deleteEventByName(eventName);
+		logger.info("Event deleted successfully: {}", eventName);
+		return new ResponseEntity<>(response,HttpStatus.OK);
+	}
+	@PutMapping("/changeRsvp/{id}/{rsvp}")
+	 public ResponseEntity<String> updateRsvpEvent(@PathVariable("id") Long id, @PathVariable("rsvp") Boolean rsvp){
+		 logger.info("Request to update RSVP for event ID: {} to {}", id, rsvp);
+		String response=eventService.updateRsvp(id, rsvp);
+		logger.info("RSVP updated successfully for event ID: {}", id);
+		return new ResponseEntity<>(response,HttpStatus.OK);
+		
+	}
+}

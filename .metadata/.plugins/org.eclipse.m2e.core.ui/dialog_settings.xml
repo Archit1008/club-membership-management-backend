@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.m2e.core.pom.dependencies">
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+	</section>
+	<section name="MavenProjectImportWizardPage">
+		<list key="rootDirectory">
+			<item value="C:\Users\archit.jain\Downloads\blog-cms-springboot-jwt-advanced"/>
+			<item value="C:\Users\archit.jain\Downloads\blog-cms-springboot-jwt"/>
+			<item value="C:\Users\archit.jain\Downloads\blog-cms-springboot"/>
+			<item value="C:\Users\archit.jain\Downloads\blog-fullstack-all\blog-fullstack-all\backend"/>
+			<item value="C:\Users\archit.jain\Downloads\blog-management-system-final 2\blog-management-system-final\blog-management-system-final\backend"/>
+			<item value="C:\Users\archit.jain\Downloads\blog-fullstack\blog-fullstack\backend"/>
+			<item value="C:\Users\archit.jain\Downloads\music-app"/>
+			<item value="C:\Users\archit.jain\Downloads\clubmanagement"/>
+			<item value="C:\Users\archit.jain\OneDrive - HCL TECHNOLOGIES LIMITED\Documents\GuviProject\EurekaService"/>
+			<item value="C:\Users\archit.jain\OneDrive - HCL TECHNOLOGIES LIMITED\Documents\GuviProject\user5"/>
+			<item value="C:\Users\archit.jain\OneDrive - HCL TECHNOLOGIES LIMITED\Documents\GuviProject\clubmembershipmanagement"/>
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+</section>

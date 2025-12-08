@@ -1,0 +1,26 @@
+package com.hcl.guvi.capstonproject.eventmanagement.repository;
+import java.time.LocalDateTime;
+import java.util.List;
+
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.hcl.guvi.capstonproject.eventmanagement.entity.EventEntity;
+
+
+
+@Repository
+public interface EventRepository extends JpaRepository<EventEntity,Long>{
+	List<EventEntity> findByEventName(String eventName);
+
+@Query("SELECT COUNT(e) FROM EventEntity e WHERE e.ownerUserId = :ownerUserId AND FUNCTION('MONTH', e.eventDate) = :month AND FUNCTION('YEAR', e.eventDate) = :year")
+int countEventsByOwnerAndMonth(@Param("ownerUserId") String ownerUserId,
+                                @Param("month") LocalDateTime startOfMonth,
+                                @Param("year") LocalDateTime startOfNextMonth);
+
+
+}

@@ -1,0 +1,56 @@
+package com.hcl.user.controller;
+
+
+import com.hcl.user.dto.AuthRequestDto;
+import com.hcl.user.dto.ClubDto;
+import com.hcl.user.entity.User;
+import com.hcl.user.repository.UserRepository;
+import com.hcl.user.service.ClubCallingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/user/clubs")
+public class ClubController {
+
+    @Autowired
+    private ClubCallingService clubCallingService;
+    @Autowired
+    private UserRepository userRepo;
+    
+    // ✅ Create Club
+   
+    @PostMapping("/club/registration")
+    @PreAuthorize("hasAuthority('OWNER')")
+    public ResponseEntity<String> createClub(@RequestBody ClubDto clubDto) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	String userName=auth.getName();
+        clubDto.setOwnerName(userName);
+        String response = clubCallingService.createClub(clubDto);
+        return ResponseEntity.ok(response);
+    }
+
+    // ✅ Delete Club
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteClub(@PathVariable Long id) {
+        String response = clubCallingService.deleteClub(id);
+        return ResponseEntity.ok(response);
+    }
+
+    // ✅ Fetch All Clubs
+    @GetMapping
+    @PreAuthorize("hasAuthority('OWNER')")
+    public ResponseEntity<List<ClubDto>> fetchAllClubs() {
+        List<ClubDto> clubs = clubCallingService.fetchAllClubs();
+        return ResponseEntity.ok(clubs);
+    }
+}
