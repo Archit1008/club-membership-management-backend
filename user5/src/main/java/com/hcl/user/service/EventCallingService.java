@@ -2,11 +2,14 @@ package com.hcl.user.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.hcl.user.dto.EventDto;
 
 import com.hcl.user.clubconfig.EventClient;
+import org.springframework.web.bind.annotation.GetMapping;
+
 @Service
 public class EventCallingService {
 	private final EventClient eventClient;
@@ -31,4 +34,5 @@ public class EventCallingService {
     public String updateRsvp(Long id,Boolean rsvp) {
     	return eventClient.updateRsvpEvent(id, rsvp);
     }
+	public List<EventDto> getAllEvents(){ return eventClient.getAllEvents().getBody();}
 }

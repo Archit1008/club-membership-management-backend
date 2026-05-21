@@ -53,4 +53,12 @@ public class ClubController {
         List<ClubDto> clubs = clubCallingService.fetchAllClubs();
         return ResponseEntity.ok(clubs);
     }
+    @GetMapping("/byownername")
+    @PreAuthorize("hasAuthority('OWNER')")
+    public ResponseEntity<List<ClubDto>>fetchAllClubsByUserName() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName=auth.getName();
+        List<ClubDto> clubs = clubCallingService.fetchAllClubsByUserName(userName).getBody();
+        return ResponseEntity.ok(clubs);
+    }
 }

@@ -37,4 +37,9 @@ public class ClubController {
         List<ClubDto> clubs = clubService.fetchAllClub();
         return ResponseEntity.ok(clubs);
     }
+    @GetMapping("/byownername/{ownername}")
+    public ResponseEntity<List<ClubDto>>fetchAllClubsByUserName(@PathVariable  String ownername){
+        List<ClubDto>clubs=clubService.fetchclubsByOwnerUsername(ownername);
+        return ResponseEntity.ok(clubs);
+    }
 }

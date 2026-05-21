@@ -31,6 +31,9 @@ public class ClubCallingService {
 		    public List<ClubDto> fetchAllClubs() {
 		    	return clubClient.fetchAllClubs();
 		    }
-	
+
+	public ResponseEntity<List<ClubDto>>fetchAllClubsByUserName(@PathVariable  String ownername) {
+		return clubClient.fetchAllClubsByUserName(ownername);
+	}
 
 }

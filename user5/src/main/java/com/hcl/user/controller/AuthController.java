@@ -21,7 +21,7 @@ import com.hcl.user.securityconfig.JwtUtil;
 import com.hcl.user.serviceImpl.AuthService;
 import com.hcl.user.serviceImpl.MyUserService;
 
-import lombok.var;
+
 
 @RestController
 @RequestMapping("/api/auth")

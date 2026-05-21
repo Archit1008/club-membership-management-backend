@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  eureka:
+    build: ./eurekaservice
+    ports:
+      - "8761:8761"
+
+  user:
+    build: ./user5
+    ports:
+      - "8989:8989"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/eventdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
+      eureka:
+        condition: service_started
+
+  eventmanagement:
+    build: ./eventmanagement
+    ports:
+      - "8283:8283"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/userdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
+      eureka:
+        condition: service_started
+      user:
+        condition: service_started
+
+volumes:
+  db_data:

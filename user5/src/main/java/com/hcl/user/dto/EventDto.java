@@ -24,4 +24,6 @@ public class EventDto {
 	LocalDateTime eventDate;
 	private Long clubId;
 	private String ownerName;
+	private String location;
+	private String clubName;
 }

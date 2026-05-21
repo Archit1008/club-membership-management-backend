@@ -35,6 +35,10 @@ public class ClubEntity {
     @Column(nullable = false)
     private String ownerName;
 
-	
-   
+
+	public ClubEntity(String clubName, String location, String ownerName) {
+		this.clubName = clubName;
+		this.location = location;
+		this.ownerName = ownerName;
+	}
 }

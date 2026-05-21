@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name="events")
-public class EventEntity {
+public class  EventEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	private Long id;
@@ -31,6 +31,18 @@ public class EventEntity {
 	private ClubEntity club;
     @Column(nullable = false)
     private String ownerName;
+	private String location;
+	private String  clubName;
+	public EventEntity(Long id, String eventName, Boolean rsvp,
+					   LocalDateTime eventDate) {
+		this.id = id;
+		this.eventName = eventName;
+		this.rsvp = rsvp;
+		this.eventDate = eventDate;
+		this.club = club;
+		this.ownerName = ownerName;
+		this.location = location;
+	}
 
-	
+
 }

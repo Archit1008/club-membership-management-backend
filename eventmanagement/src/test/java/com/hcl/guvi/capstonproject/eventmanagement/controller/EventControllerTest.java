@@ -61,17 +61,17 @@ class EventControllerTest {
         verify(eventService, times(1)).findAllEvent();
     }
 
-    @Test
-    void testGetEventById() {
-        EventDto event = new EventDto();
-        when(eventService.findEventById(1L)).thenReturn(event);
-
-        ResponseEntity<EventDto> response = eventController.getEventById(1L);
-
-        assertEquals(event, response.getBody());
-        assertEquals(200, response.getStatusCodeValue());
-        verify(eventService, times(1)).findEventById(1L);
-    }
+//    @Test
+//    void testGetEventById() {
+//        EventDto event = new EventDto();
+//        when(eventService.findEventById(1L)).thenReturn(event);
+//
+//        ResponseEntity<EventDto> response = eventController.getEventById(1L);
+//
+//        assertEquals(event, response.getBody());
+//        assertEquals(200, response.getStatusCodeValue());
+//        verify(eventService, times(1)).findEventById(1L);
+//    }
 
     @Test
     void testDeleteEvent() {

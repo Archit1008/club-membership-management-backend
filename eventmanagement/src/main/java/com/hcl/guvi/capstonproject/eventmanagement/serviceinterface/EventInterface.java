@@ -3,6 +3,7 @@ package com.hcl.guvi.capstonproject.eventmanagement.serviceinterface;
 import java.util.List;
 
 import com.hcl.guvi.capstonproject.eventmanagement.dto.EventDto;
+import com.hcl.guvi.capstonproject.eventmanagement.dto.GetsEvent;
 
 public interface EventInterface {
 	public String saveEvent(EventDto event);
@@ -12,5 +13,5 @@ public interface EventInterface {
 	public List<EventDto> findrequiredEventByName(String name);
 	public String deleteEventByName(String name);
 	public String updateRsvp(Long id,Boolean rsvp);
-
+	public List<EventDto> getEvents();
 }

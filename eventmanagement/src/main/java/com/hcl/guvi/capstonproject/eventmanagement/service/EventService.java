@@ -7,6 +7,8 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
+import com.hcl.guvi.capstonproject.eventmanagement.dto.GetsEvent;
+import com.hcl.guvi.capstonproject.eventmanagement.entity.GetEventsEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -203,6 +205,27 @@ public List<EventDto> findAllEvent() {
 		        return "Successfully updated RSVP";
 
 		
+	}
+	@Override
+	public List<EventDto> getEvents(){
+		List<EventEntity> getEvents=eventRepository.findAll();
+		List<EventDto> getEvent=getEvents.stream().map(events->{
+			EventDto dto = new EventDto();
+			dto.setId(events.getId());
+			dto.setEventName(events.getEventName());
+			dto.setEventDate(events.getEventDate());
+			dto.setRsvp(events.getRsvp());
+
+			// ✅ Map club ID safely (handle nulls to avoid NPE)
+			ClubEntity club = events.getClub();
+			dto.setClubName(club != null ? club.getClubName() : null);
+			dto.setLocation(club!=null?club.getLocation():null);
+
+			return dto;
+		}).collect(Collectors.toList());
+
+		return getEvent;
+
 	}
 
 }

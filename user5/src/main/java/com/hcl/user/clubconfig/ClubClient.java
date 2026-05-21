@@ -20,4 +20,7 @@ public interface ClubClient {
 	    public String deleteClub(@PathVariable Long id);
 	 @GetMapping
 	    public List<ClubDto> fetchAllClubs() ;
+	@GetMapping("/byownername/{ownername}")
+	public ResponseEntity<List<ClubDto>>fetchAllClubsByUserName(@PathVariable  String ownername);
+
 }

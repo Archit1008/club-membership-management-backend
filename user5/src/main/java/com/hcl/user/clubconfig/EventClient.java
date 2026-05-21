@@ -37,6 +37,7 @@ public interface EventClient {
 	public String deleteEvent( @PathVariable String name);
     @PutMapping("/changeRsvp/{id}/{rsvp}")
     String updateRsvpEvent(@PathVariable("id") Long id, @PathVariable("rsvp") Boolean rsvp);
-
+    @GetMapping("/getAllEvents")
+    public ResponseEntity<List<EventDto>>getAllEvents();
 
 }

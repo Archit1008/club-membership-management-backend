@@ -8,5 +8,6 @@ public interface ClubInterface {
      public String CreateClub(ClubDto clubDto);
      public String deleteClub(Long id);
      public List<ClubDto> fetchAllClub();
+     public List<ClubDto>fetchclubsByOwnerUsername(String username);
      
 }

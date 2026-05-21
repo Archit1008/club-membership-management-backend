@@ -32,9 +32,7 @@ public class AuthService {
     	   userRepo.save(user);
     	   return "Successfully save user data";
        }
-     public List<User>getUser(){
-    	 List<User>user=userRepo.findAll();
-    	 return user;
-     }
+
+
       
 }

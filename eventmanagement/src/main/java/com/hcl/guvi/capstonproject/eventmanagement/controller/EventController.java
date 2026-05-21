@@ -69,4 +69,9 @@ public class EventController {
 		return new ResponseEntity<>(response,HttpStatus.OK);
 		
 	}
+	@GetMapping("/getAllEvents")
+	public ResponseEntity<List<EventDto>>getAllEvents(){
+		List<EventDto> events=eventService.getEvents();
+		return new ResponseEntity<>(events,HttpStatus.OK);
+	}
 }

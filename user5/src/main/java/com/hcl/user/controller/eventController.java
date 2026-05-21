@@ -76,15 +76,11 @@ public class eventController {
 		String s=clubClient.updateRsvp(id, rsvp);
 		return new ResponseEntity<>(s,HttpStatus.ACCEPTED);
 	}
-	@GetMapping("/getAllUser")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<List<User>>getAllUser(){
-		List<User>user=authService.getUser();
-		return new ResponseEntity<>(user,HttpStatus.ACCEPTED);
-		
+	@GetMapping("/getAllEvents")
+	@PreAuthorize("hasAnyAuthority('MEMBER')")
+	public ResponseEntity<List<EventDto>> getAllEvents() {
+		List<EventDto> event = clubClient.getAllEvents();
+		return new ResponseEntity<>(event, HttpStatus.ACCEPTED);
 	}
-	
-	
-	
 
 }
