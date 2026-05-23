@@ -3,11 +3,11 @@ FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy pom.xml and download dependencies
-COPY pom.xml .
+COPY eurekaservice/pom.xml .
 RUN mvn dependency:go-offline
 
 # Copy source code
-COPY src ./src
+COPY eurekaservice/src ./src
 
 # Build JAR
 RUN mvn clean package -DskipTests
