@@ -7,7 +7,7 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 # Copy source code
-COPY src ./src
+COPY eurekaservice/src ./src
 
 # Build JAR
 RUN mvn clean package -DskipTests
