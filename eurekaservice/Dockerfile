@@ -7,7 +7,7 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 # Copy source code
-COPY  ./src
+COPY club-membership-management-backend/eurekaservice/src ./src
 
 # Build JAR
 RUN mvn clean package -DskipTests
